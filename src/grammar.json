@@ -3,46 +3,82 @@
   "name": "fountain_inline",
   "rules": {
     "document": {
-      "type": "REPEAT",
+      "type": "REPEAT1",
       "content": {
-        "type": "CHOICE",
-        "members": [
-          {
-            "type": "SYMBOL",
-            "name": "inline_note"
-          },
-          {
-            "type": "SYMBOL",
-            "name": "inline_boneyard"
-          },
-          {
-            "type": "SYMBOL",
-            "name": "paren_text"
-          },
-          {
-            "type": "SYMBOL",
-            "name": "text"
-          }
-        ]
+        "type": "SYMBOL",
+        "name": "_element"
       }
     },
-    "paren_text": {
-      "type": "PATTERN",
-      "value": "（[^）\\n]+）|\\([^)\\n]+\\)"
-    },
-    "inline_note": {
-      "type": "TOKEN",
-      "content": {
-        "type": "PATTERN",
-        "value": "\\[\\[[^\\]]*(?:\\][^\\]]*)*\\]\\]"
-      }
-    },
-    "inline_boneyard": {
-      "type": "TOKEN",
-      "content": {
-        "type": "PATTERN",
-        "value": "\\/\\*[^*]*(?:\\*[^\\/][^*]*)*\\*\\/"
-      }
+    "_element": {
+      "type": "CHOICE",
+      "members": [
+        {
+          "type": "SEQ",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "boneyard_start"
+            },
+            {
+              "type": "REPEAT1",
+              "content": {
+                "type": "CHOICE",
+                "members": [
+                  {
+                    "type": "PATTERN",
+                    "value": "[^*]+"
+                  },
+                  {
+                    "type": "PATTERN",
+                    "value": "\\*[^\\/]"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "STRING",
+              "value": "*/"
+            }
+          ]
+        },
+        {
+          "type": "SEQ",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "note_start"
+            },
+            {
+              "type": "REPEAT1",
+              "content": {
+                "type": "CHOICE",
+                "members": [
+                  {
+                    "type": "PATTERN",
+                    "value": "[^\\]]+"
+                  },
+                  {
+                    "type": "PATTERN",
+                    "value": "\\][^\\]]"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "STRING",
+              "value": "]]"
+            }
+          ]
+        },
+        {
+          "type": "SYMBOL",
+          "name": "paren_text"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "text"
+        }
+      ]
     },
     "text": {
       "type": "TOKEN",
@@ -51,7 +87,7 @@
         "value": -1,
         "content": {
           "type": "PATTERN",
-          "value": "[^\\[\\(\\/\\n（）]+|\\/|\\n|."
+          "value": "[^\\/\\[\\(]"
         }
       }
     }
@@ -59,12 +95,25 @@
   "extras": [
     {
       "type": "PATTERN",
-      "value": "\\s"
+      "value": "\\n"
     }
   ],
   "conflicts": [],
   "precedences": [],
-  "externals": [],
+  "externals": [
+    {
+      "type": "SYMBOL",
+      "name": "paren_text"
+    },
+    {
+      "type": "SYMBOL",
+      "name": "boneyard_start"
+    },
+    {
+      "type": "SYMBOL",
+      "name": "note_start"
+    }
+  ],
   "inline": [],
   "supertypes": [],
   "reserved": {}

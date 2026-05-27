@@ -6,14 +6,14 @@
     "fields": {},
     "children": {
       "multiple": true,
-      "required": false,
+      "required": true,
       "types": [
         {
-          "type": "inline_boneyard",
+          "type": "boneyard_start",
           "named": true
         },
         {
-          "type": "inline_note",
+          "type": "note_start",
           "named": true
         },
         {
@@ -28,11 +28,19 @@
     }
   },
   {
-    "type": "inline_boneyard",
+    "type": "*/",
+    "named": false
+  },
+  {
+    "type": "]]",
+    "named": false
+  },
+  {
+    "type": "boneyard_start",
     "named": true
   },
   {
-    "type": "inline_note",
+    "type": "note_start",
     "named": true
   },
   {
