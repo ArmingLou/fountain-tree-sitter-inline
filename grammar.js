@@ -13,14 +13,27 @@ module.exports = grammar({
     document: $ => repeat1($._element),
 
     _element: $ => choice(
-      // boneyard: /* 后跟内容(含单独的*但不含*/) 到 */
-      seq($.boneyard_start, repeat1(choice(/[^*]+/, /\*[^\/]/)), '*/'),
-      // inline_note: [[ 后跟内容(含单独的]但不含]]) 到 ]]
-      seq($.note_start, repeat1(choice(/[^\]]+/, /\][^\]]/)), ']]'),
+      $.boneyard,
+      $.inline_note,
       $.paren_text,
       $.text
     ),
 
+    // 完整的 boneyard 注释 /* ... */
+    boneyard: $ => seq(
+      $.boneyard_start,
+      repeat1(choice(/[^*]+/, /\*[^\/]/)),
+      '*/'
+    ),
+
+    // 完整的 inline_note [[...]]
+    inline_note: $ => seq(
+      $.note_start,
+      repeat1(choice(/[^\]]+/, /\][^\]]/)),
+      ']]'
+    ),
+
+    // text - 排除 scanner 处理的特殊字符
     text: $ => token(prec(-1, /[^\/\[\(]/))
   }
 });

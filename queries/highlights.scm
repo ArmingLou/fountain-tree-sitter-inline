@@ -5,7 +5,7 @@
 (inline_note) @comment
 
 ;; 注释 /*...*/ — 注释色
-(inline_boneyard) @comment
+(boneyard) @comment
 
 ;; 括号 (text) — 类型色，和对话文本区分
 (paren_text) @type

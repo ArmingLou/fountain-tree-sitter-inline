@@ -41,39 +41,28 @@ bool tree_sitter_fountain_inline_external_scanner_scan(
     return false;
   }
 
-  // ==== 3. PAREN_TEXT - 行首的括号 ====
+  // ==== 3. PAREN_TEXT - 行首的左括号对 ====
   if (valid_symbols[sym_paren_text]) {
     if ((lexer->lookahead == '(' || lexer->lookahead == 0xFF08) 
         && lexer->get_column(lexer) == 0) {
-      int32_t close_paren = (lexer->lookahead == '(') ? ')' : 0xFF09;
+      int32_t open_paren = lexer->lookahead;
+      int32_t close_paren = (open_paren == '(') ? ')' : 0xFF09;
       lexer->advance(lexer, false);
       
       bool found_close = false;
-      while (lexer->lookahead != '\0') {
+      while (lexer->lookahead != '\0' && lexer->lookahead != '\n') {
         if (lexer->lookahead == close_paren) {
           lexer->advance(lexer, false);
           found_close = true;
           break;
         }
-        if (lexer->lookahead == '\n') {
-          lexer->advance(lexer, false);
-          while (lexer->lookahead == ' ' || lexer->lookahead == '\t') {
-            lexer->advance(lexer, false);
-          }
-          continue;
-        }
         lexer->advance(lexer, false);
       }
       
       if (found_close) {
-        while (lexer->lookahead == ' ' || lexer->lookahead == '\t') {
-          lexer->advance(lexer, false);
-        }
-        if (lexer->lookahead == '\n' || lexer->lookahead == '\0') {
-          lexer->result_symbol = sym_paren_text;
-          lexer->mark_end(lexer);
-          return true;
-        }
+        lexer->result_symbol = sym_paren_text;
+        lexer->mark_end(lexer);
+        return true;
       }
     }
   }

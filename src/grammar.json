@@ -13,62 +13,12 @@
       "type": "CHOICE",
       "members": [
         {
-          "type": "SEQ",
-          "members": [
-            {
-              "type": "SYMBOL",
-              "name": "boneyard_start"
-            },
-            {
-              "type": "REPEAT1",
-              "content": {
-                "type": "CHOICE",
-                "members": [
-                  {
-                    "type": "PATTERN",
-                    "value": "[^*]+"
-                  },
-                  {
-                    "type": "PATTERN",
-                    "value": "\\*[^\\/]"
-                  }
-                ]
-              }
-            },
-            {
-              "type": "STRING",
-              "value": "*/"
-            }
-          ]
+          "type": "SYMBOL",
+          "name": "boneyard"
         },
         {
-          "type": "SEQ",
-          "members": [
-            {
-              "type": "SYMBOL",
-              "name": "note_start"
-            },
-            {
-              "type": "REPEAT1",
-              "content": {
-                "type": "CHOICE",
-                "members": [
-                  {
-                    "type": "PATTERN",
-                    "value": "[^\\]]+"
-                  },
-                  {
-                    "type": "PATTERN",
-                    "value": "\\][^\\]]"
-                  }
-                ]
-              }
-            },
-            {
-              "type": "STRING",
-              "value": "]]"
-            }
-          ]
+          "type": "SYMBOL",
+          "name": "inline_note"
         },
         {
           "type": "SYMBOL",
@@ -77,6 +27,64 @@
         {
           "type": "SYMBOL",
           "name": "text"
+        }
+      ]
+    },
+    "boneyard": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "boneyard_start"
+        },
+        {
+          "type": "REPEAT1",
+          "content": {
+            "type": "CHOICE",
+            "members": [
+              {
+                "type": "PATTERN",
+                "value": "[^*]+"
+              },
+              {
+                "type": "PATTERN",
+                "value": "\\*[^\\/]"
+              }
+            ]
+          }
+        },
+        {
+          "type": "STRING",
+          "value": "*/"
+        }
+      ]
+    },
+    "inline_note": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "note_start"
+        },
+        {
+          "type": "REPEAT1",
+          "content": {
+            "type": "CHOICE",
+            "members": [
+              {
+                "type": "PATTERN",
+                "value": "[^\\]]+"
+              },
+              {
+                "type": "PATTERN",
+                "value": "\\][^\\]]"
+              }
+            ]
+          }
+        },
+        {
+          "type": "STRING",
+          "value": "]]"
         }
       ]
     },
