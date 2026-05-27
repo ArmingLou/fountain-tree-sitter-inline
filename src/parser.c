@@ -12,7 +12,7 @@
 #define SYMBOL_COUNT 7
 #define ALIAS_COUNT 0
 #define TOKEN_COUNT 5
-#define EXTERNAL_TOKEN_COUNT 2
+#define EXTERNAL_TOKEN_COUNT 0
 #define FIELD_COUNT 0
 #define MAX_ALIAS_SEQUENCE_LENGTH 2
 #define MAX_RESERVED_WORD_SET_SIZE 0
@@ -21,9 +21,9 @@
 
 enum ts_symbol_identifiers {
   sym_paren_text = 1,
-  sym_text = 2,
-  sym_inline_note = 3,
-  sym_inline_boneyard = 4,
+  sym_inline_note = 2,
+  sym_inline_boneyard = 3,
+  sym_text = 4,
   sym_document = 5,
   aux_sym_document_repeat1 = 6,
 };
@@ -31,9 +31,9 @@ enum ts_symbol_identifiers {
 static const char * const ts_symbol_names[] = {
   [ts_builtin_sym_end] = "end",
   [sym_paren_text] = "paren_text",
-  [sym_text] = "text",
   [sym_inline_note] = "inline_note",
   [sym_inline_boneyard] = "inline_boneyard",
+  [sym_text] = "text",
   [sym_document] = "document",
   [aux_sym_document_repeat1] = "document_repeat1",
 };
@@ -41,9 +41,9 @@ static const char * const ts_symbol_names[] = {
 static const TSSymbol ts_symbol_map[] = {
   [ts_builtin_sym_end] = ts_builtin_sym_end,
   [sym_paren_text] = sym_paren_text,
-  [sym_text] = sym_text,
   [sym_inline_note] = sym_inline_note,
   [sym_inline_boneyard] = sym_inline_boneyard,
+  [sym_text] = sym_text,
   [sym_document] = sym_document,
   [aux_sym_document_repeat1] = aux_sym_document_repeat1,
 };
@@ -57,15 +57,15 @@ static const TSSymbolMetadata ts_symbol_metadata[] = {
     .visible = true,
     .named = true,
   },
-  [sym_text] = {
-    .visible = true,
-    .named = true,
-  },
   [sym_inline_note] = {
     .visible = true,
     .named = true,
   },
   [sym_inline_boneyard] = {
+    .visible = true,
+    .named = true,
+  },
+  [sym_text] = {
     .visible = true,
     .named = true,
   },
@@ -100,52 +100,101 @@ static bool ts_lex(TSLexer *lexer, TSStateId state) {
   eof = lexer->eof(lexer);
   switch (state) {
     case 0:
-      if (eof) ADVANCE(2);
-      if (lookahead == '\n') ADVANCE(5);
-      if (lookahead == '(') ADVANCE(7);
-      if (lookahead == '/' ||
-          lookahead == '[') ADVANCE(4);
+      if (eof) ADVANCE(7);
+      if (lookahead == '\n') ADVANCE(12);
+      if (lookahead == '(') ADVANCE(16);
+      if (lookahead == '/') ADVANCE(13);
+      if (lookahead == '[') ADVANCE(14);
+      if (lookahead == 0xff08) ADVANCE(17);
+      if (lookahead == 0xff09) ADVANCE(11);
       if (('\t' <= lookahead && lookahead <= '\r') ||
-          lookahead == ' ') ADVANCE(5);
-      if (lookahead != 0) ADVANCE(6);
+          lookahead == ' ') ADVANCE(12);
+      if (lookahead != 0) ADVANCE(15);
       END_STATE();
     case 1:
-      if (lookahead == ')') ADVANCE(3);
+      if (lookahead == ')') ADVANCE(8);
       if (lookahead != 0 &&
           lookahead != '\n') ADVANCE(1);
       END_STATE();
     case 2:
-      ACCEPT_TOKEN(ts_builtin_sym_end);
+      if (lookahead == '*') ADVANCE(3);
+      if (lookahead != 0) ADVANCE(2);
       END_STATE();
     case 3:
-      ACCEPT_TOKEN(sym_paren_text);
+      if (lookahead == '/') ADVANCE(10);
+      if (lookahead != 0) ADVANCE(2);
       END_STATE();
     case 4:
-      ACCEPT_TOKEN(sym_text);
+      if (lookahead == ']') ADVANCE(9);
+      if (lookahead != 0) ADVANCE(5);
       END_STATE();
     case 5:
-      ACCEPT_TOKEN(sym_text);
-      if (lookahead == '\n') ADVANCE(5);
-      if (lookahead == '(') ADVANCE(7);
-      if (lookahead == '/' ||
-          lookahead == '[') ADVANCE(4);
-      if (('\t' <= lookahead && lookahead <= '\r') ||
-          lookahead == ' ') ADVANCE(5);
-      if (lookahead != 0) ADVANCE(6);
+      if (lookahead == ']') ADVANCE(4);
+      if (lookahead != 0) ADVANCE(5);
       END_STATE();
     case 6:
+      if (lookahead == 0xff09) ADVANCE(8);
+      if (lookahead != 0 &&
+          lookahead != '\n') ADVANCE(6);
+      END_STATE();
+    case 7:
+      ACCEPT_TOKEN(ts_builtin_sym_end);
+      END_STATE();
+    case 8:
+      ACCEPT_TOKEN(sym_paren_text);
+      END_STATE();
+    case 9:
+      ACCEPT_TOKEN(sym_inline_note);
+      if (lookahead == ']') ADVANCE(9);
+      if (lookahead != 0) ADVANCE(5);
+      END_STATE();
+    case 10:
+      ACCEPT_TOKEN(sym_inline_boneyard);
+      END_STATE();
+    case 11:
+      ACCEPT_TOKEN(sym_text);
+      END_STATE();
+    case 12:
+      ACCEPT_TOKEN(sym_text);
+      if (lookahead == '\n') ADVANCE(12);
+      if (lookahead == '(') ADVANCE(16);
+      if (lookahead == '/') ADVANCE(13);
+      if (lookahead == '[') ADVANCE(14);
+      if (lookahead == 0xff08) ADVANCE(17);
+      if (lookahead == 0xff09) ADVANCE(11);
+      if (('\t' <= lookahead && lookahead <= '\r') ||
+          lookahead == ' ') ADVANCE(12);
+      if (lookahead != 0) ADVANCE(15);
+      END_STATE();
+    case 13:
+      ACCEPT_TOKEN(sym_text);
+      if (lookahead == '*') ADVANCE(2);
+      END_STATE();
+    case 14:
+      ACCEPT_TOKEN(sym_text);
+      if (lookahead == '[') ADVANCE(5);
+      END_STATE();
+    case 15:
       ACCEPT_TOKEN(sym_text);
       if (lookahead != 0 &&
           lookahead != '\n' &&
           lookahead != '(' &&
           lookahead != '/' &&
-          lookahead != '[') ADVANCE(6);
+          lookahead != '[' &&
+          lookahead != 0xff08 &&
+          lookahead != 0xff09) ADVANCE(15);
       END_STATE();
-    case 7:
+    case 16:
       ACCEPT_TOKEN(sym_text);
       if (lookahead != 0 &&
           lookahead != '\n' &&
           lookahead != ')') ADVANCE(1);
+      END_STATE();
+    case 17:
+      ACCEPT_TOKEN(sym_text);
+      if (lookahead != 0 &&
+          lookahead != '\n' &&
+          lookahead != 0xff09) ADVANCE(6);
       END_STATE();
     default:
       return false;
@@ -153,10 +202,10 @@ static bool ts_lex(TSLexer *lexer, TSStateId state) {
 }
 
 static const TSLexerMode ts_lex_modes[STATE_COUNT] = {
-  [0] = {.lex_state = 0, .external_lex_state = 1},
-  [1] = {.lex_state = 0, .external_lex_state = 1},
-  [2] = {.lex_state = 0, .external_lex_state = 1},
-  [3] = {.lex_state = 0, .external_lex_state = 1},
+  [0] = {.lex_state = 0},
+  [1] = {.lex_state = 0},
+  [2] = {.lex_state = 0},
+  [3] = {.lex_state = 0},
   [4] = {.lex_state = 0},
 };
 
@@ -164,40 +213,40 @@ static const uint16_t ts_parse_table[LARGE_STATE_COUNT][SYMBOL_COUNT] = {
   [STATE(0)] = {
     [ts_builtin_sym_end] = ACTIONS(1),
     [sym_paren_text] = ACTIONS(1),
-    [sym_text] = ACTIONS(1),
     [sym_inline_note] = ACTIONS(1),
     [sym_inline_boneyard] = ACTIONS(1),
+    [sym_text] = ACTIONS(1),
   },
   [STATE(1)] = {
     [sym_document] = STATE(4),
     [aux_sym_document_repeat1] = STATE(2),
     [ts_builtin_sym_end] = ACTIONS(3),
     [sym_paren_text] = ACTIONS(5),
+    [sym_inline_note] = ACTIONS(5),
+    [sym_inline_boneyard] = ACTIONS(5),
     [sym_text] = ACTIONS(5),
-    [sym_inline_note] = ACTIONS(7),
-    [sym_inline_boneyard] = ACTIONS(7),
   },
   [STATE(2)] = {
     [aux_sym_document_repeat1] = STATE(3),
-    [ts_builtin_sym_end] = ACTIONS(9),
-    [sym_paren_text] = ACTIONS(11),
-    [sym_text] = ACTIONS(11),
-    [sym_inline_note] = ACTIONS(13),
-    [sym_inline_boneyard] = ACTIONS(13),
+    [ts_builtin_sym_end] = ACTIONS(7),
+    [sym_paren_text] = ACTIONS(9),
+    [sym_inline_note] = ACTIONS(9),
+    [sym_inline_boneyard] = ACTIONS(9),
+    [sym_text] = ACTIONS(9),
   },
   [STATE(3)] = {
     [aux_sym_document_repeat1] = STATE(3),
-    [ts_builtin_sym_end] = ACTIONS(15),
-    [sym_paren_text] = ACTIONS(17),
-    [sym_text] = ACTIONS(17),
-    [sym_inline_note] = ACTIONS(20),
-    [sym_inline_boneyard] = ACTIONS(20),
+    [ts_builtin_sym_end] = ACTIONS(11),
+    [sym_paren_text] = ACTIONS(13),
+    [sym_inline_note] = ACTIONS(13),
+    [sym_inline_boneyard] = ACTIONS(13),
+    [sym_text] = ACTIONS(13),
   },
 };
 
 static const uint16_t ts_small_parse_table[] = {
   [0] = 1,
-    ACTIONS(23), 1,
+    ACTIONS(16), 1,
       ts_builtin_sym_end,
 };
 
@@ -210,42 +259,16 @@ static const TSParseActionEntry ts_parse_actions[] = {
   [1] = {.entry = {.count = 1, .reusable = false}}, RECOVER(),
   [3] = {.entry = {.count = 1, .reusable = true}}, REDUCE(sym_document, 0, 0, 0),
   [5] = {.entry = {.count = 1, .reusable = false}}, SHIFT(2),
-  [7] = {.entry = {.count = 1, .reusable = true}}, SHIFT(2),
-  [9] = {.entry = {.count = 1, .reusable = true}}, REDUCE(sym_document, 1, 0, 0),
-  [11] = {.entry = {.count = 1, .reusable = false}}, SHIFT(3),
-  [13] = {.entry = {.count = 1, .reusable = true}}, SHIFT(3),
-  [15] = {.entry = {.count = 1, .reusable = true}}, REDUCE(aux_sym_document_repeat1, 2, 0, 0),
-  [17] = {.entry = {.count = 2, .reusable = false}}, REDUCE(aux_sym_document_repeat1, 2, 0, 0), SHIFT_REPEAT(3),
-  [20] = {.entry = {.count = 2, .reusable = true}}, REDUCE(aux_sym_document_repeat1, 2, 0, 0), SHIFT_REPEAT(3),
-  [23] = {.entry = {.count = 1, .reusable = true}},  ACCEPT_INPUT(),
-};
-
-enum ts_external_scanner_symbol_identifiers {
-  ts_external_token_inline_note = 0,
-  ts_external_token_inline_boneyard = 1,
-};
-
-static const TSSymbol ts_external_scanner_symbol_map[EXTERNAL_TOKEN_COUNT] = {
-  [ts_external_token_inline_note] = sym_inline_note,
-  [ts_external_token_inline_boneyard] = sym_inline_boneyard,
-};
-
-static const bool ts_external_scanner_states[2][EXTERNAL_TOKEN_COUNT] = {
-  [1] = {
-    [ts_external_token_inline_note] = true,
-    [ts_external_token_inline_boneyard] = true,
-  },
+  [7] = {.entry = {.count = 1, .reusable = true}}, REDUCE(sym_document, 1, 0, 0),
+  [9] = {.entry = {.count = 1, .reusable = false}}, SHIFT(3),
+  [11] = {.entry = {.count = 1, .reusable = true}}, REDUCE(aux_sym_document_repeat1, 2, 0, 0),
+  [13] = {.entry = {.count = 2, .reusable = false}}, REDUCE(aux_sym_document_repeat1, 2, 0, 0), SHIFT_REPEAT(3),
+  [16] = {.entry = {.count = 1, .reusable = true}},  ACCEPT_INPUT(),
 };
 
 #ifdef __cplusplus
 extern "C" {
 #endif
-void *tree_sitter_fountain_inline_external_scanner_create(void);
-void tree_sitter_fountain_inline_external_scanner_destroy(void *);
-bool tree_sitter_fountain_inline_external_scanner_scan(void *, TSLexer *, const bool *);
-unsigned tree_sitter_fountain_inline_external_scanner_serialize(void *, char *);
-void tree_sitter_fountain_inline_external_scanner_deserialize(void *, const char *, unsigned);
-
 #ifdef TREE_SITTER_HIDE_SYMBOLS
 #define TS_PUBLIC
 #elif defined(_WIN32)
@@ -278,15 +301,6 @@ TS_PUBLIC const TSLanguage *tree_sitter_fountain_inline(void) {
     .alias_sequences = &ts_alias_sequences[0][0],
     .lex_modes = (const void*)ts_lex_modes,
     .lex_fn = ts_lex,
-    .external_scanner = {
-      &ts_external_scanner_states[0][0],
-      ts_external_scanner_symbol_map,
-      tree_sitter_fountain_inline_external_scanner_create,
-      tree_sitter_fountain_inline_external_scanner_destroy,
-      tree_sitter_fountain_inline_external_scanner_scan,
-      tree_sitter_fountain_inline_external_scanner_serialize,
-      tree_sitter_fountain_inline_external_scanner_deserialize,
-    },
     .primary_state_ids = ts_primary_state_ids,
     .name = "fountain_inline",
     .max_reserved_word_set_size = 0,

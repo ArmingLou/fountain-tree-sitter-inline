@@ -28,11 +28,32 @@
     },
     "paren_text": {
       "type": "PATTERN",
-      "value": "\\([^)\\n]+\\)"
+      "value": "（[^）\\n]+）|\\([^)\\n]+\\)"
+    },
+    "inline_note": {
+      "type": "TOKEN",
+      "content": {
+        "type": "PATTERN",
+        "value": "\\[\\[[^\\]]*(?:\\][^\\]]*)*\\]\\]"
+      }
+    },
+    "inline_boneyard": {
+      "type": "TOKEN",
+      "content": {
+        "type": "PATTERN",
+        "value": "\\/\\*[^*]*(?:\\*[^\\/][^*]*)*\\*\\/"
+      }
     },
     "text": {
-      "type": "PATTERN",
-      "value": "[^\\[\\(/\\n]+|\\/|\\n|."
+      "type": "TOKEN",
+      "content": {
+        "type": "PREC",
+        "value": -1,
+        "content": {
+          "type": "PATTERN",
+          "value": "[^\\[\\(\\/\\n（）]+|\\/|\\n|."
+        }
+      }
     }
   },
   "extras": [
@@ -43,16 +64,7 @@
   ],
   "conflicts": [],
   "precedences": [],
-  "externals": [
-    {
-      "type": "SYMBOL",
-      "name": "inline_note"
-    },
-    {
-      "type": "SYMBOL",
-      "name": "inline_boneyard"
-    }
-  ],
+  "externals": [],
   "inline": [],
   "supertypes": [],
   "reserved": {}
