@@ -41,20 +41,26 @@ bool tree_sitter_fountain_inline_external_scanner_scan(
     return false;
   }
 
-  // ==== 3. PAREN_TEXT - 行首的左括号对 ====
+  // ==== 3. PAREN_TEXT - 行首括号，支持跨行 ====
   if (valid_symbols[sym_paren_text]) {
     if ((lexer->lookahead == '(' || lexer->lookahead == 0xFF08) 
         && lexer->get_column(lexer) == 0) {
-      int32_t open_paren = lexer->lookahead;
-      int32_t close_paren = (open_paren == '(') ? ')' : 0xFF09;
+      int32_t close_paren = (lexer->lookahead == '(') ? ')' : 0xFF09;
       lexer->advance(lexer, false);
       
       bool found_close = false;
-      while (lexer->lookahead != '\0' && lexer->lookahead != '\n') {
+      while (lexer->lookahead != '\0') {
         if (lexer->lookahead == close_paren) {
           lexer->advance(lexer, false);
           found_close = true;
           break;
+        }
+        if (lexer->lookahead == '\n') {
+          lexer->advance(lexer, false);
+          while (lexer->lookahead == ' ' || lexer->lookahead == '\t') {
+            lexer->advance(lexer, false);
+          }
+          continue;
         }
         lexer->advance(lexer, false);
       }

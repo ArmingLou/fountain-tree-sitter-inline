@@ -19,21 +19,19 @@ module.exports = grammar({
       $.text
     ),
 
-    // 完整的 boneyard 注释 /* ... */
     boneyard: $ => seq(
       $.boneyard_start,
       repeat1(choice(/[^*]+/, /\*[^\/]/)),
       '*/'
     ),
 
-    // 完整的 inline_note [[...]]
     inline_note: $ => seq(
       $.note_start,
       repeat1(choice(/[^\]]+/, /\][^\]]/)),
       ']]'
     ),
 
-    // text - 排除 scanner 处理的特殊字符
-    text: $ => token(prec(-1, /[^\/\[\(]/))
+    // text 接受所有字符包括 (, 让 scanner 在行首优先级更高
+    text: $ => token(prec(-1, /[^\/\[]/))
   }
 });
