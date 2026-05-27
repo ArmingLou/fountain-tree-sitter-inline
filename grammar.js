@@ -32,8 +32,8 @@ module.exports = grammar({
       ']]'
     ),
 
-    // text 排除特殊字符，迫使 scanner 被调用
-    text: $ => token(prec(-1, /[^\/\[\(]/)),
+    // text 排除特殊字符（含中文全角左括号），迫使 scanner 被调用
+    text: $ => token(prec(-1, /[^\/\[\(\uff08]/)),
 
     // 兜底：匹配任意单个字符（含 ( ），当 scanner 不匹配时
     any_char: $ => token(prec(-2, /[\s\S]/))
