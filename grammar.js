@@ -16,7 +16,8 @@ module.exports = grammar({
       $.boneyard,
       $.inline_note,
       $.paren_text,
-      $.text
+      $.text,
+      $.any_char
     ),
 
     boneyard: $ => seq(
@@ -31,7 +32,10 @@ module.exports = grammar({
       ']]'
     ),
 
-    // text 接受所有字符包括 (, 让 scanner 在行首优先级更高
-    text: $ => token(prec(-1, /[^\/\[]/))
+    // text 排除特殊字符，迫使 scanner 被调用
+    text: $ => token(prec(-1, /[^\/\[\(]/)),
+
+    // 兜底：匹配任意单个字符（含 ( ），当 scanner 不匹配时
+    any_char: $ => token(prec(-2, /[\s\S]/))
   }
 });

@@ -27,6 +27,10 @@
         {
           "type": "SYMBOL",
           "name": "text"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "any_char"
         }
       ]
     },
@@ -95,7 +99,18 @@
         "value": -1,
         "content": {
           "type": "PATTERN",
-          "value": "[^\\/\\[]"
+          "value": "[^\\/\\[\\(]"
+        }
+      }
+    },
+    "any_char": {
+      "type": "TOKEN",
+      "content": {
+        "type": "PREC",
+        "value": -2,
+        "content": {
+          "type": "PATTERN",
+          "value": "[\\s\\S]"
         }
       }
     }

@@ -24,6 +24,10 @@
       "required": true,
       "types": [
         {
+          "type": "any_char",
+          "named": true
+        },
+        {
           "type": "boneyard",
           "named": true
         },
@@ -64,6 +68,10 @@
   {
     "type": "]]",
     "named": false
+  },
+  {
+    "type": "any_char",
+    "named": true
   },
   {
     "type": "boneyard_start",

@@ -41,10 +41,12 @@ bool tree_sitter_fountain_inline_external_scanner_scan(
     return false;
   }
 
-  // ==== 3. PAREN_TEXT - 行首括号，支持跨行 ====
+  // ==== 3. PAREN_TEXT - 行首括号（col==0），支持跨行 ====
   if (valid_symbols[sym_paren_text]) {
-    if ((lexer->lookahead == '(' || lexer->lookahead == 0xFF08) 
-        && lexer->get_column(lexer) == 0) {
+    if (lexer->lookahead == '(' || lexer->lookahead == 0xFF08) {
+      // 只在行首匹配
+      if (lexer->get_column(lexer) != 0) return false;
+      
       int32_t close_paren = (lexer->lookahead == '(') ? ')' : 0xFF09;
       lexer->advance(lexer, false);
       
