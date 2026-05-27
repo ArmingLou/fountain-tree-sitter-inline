@@ -1,0 +1,8 @@
+{
+  "name": "tree-sitter-fountain-inline",
+  "version": "0.1.0",
+  "tree-sitter": [{
+    "scope": "source.fountain-inline",
+    "highlights": "queries/highlights.scm"
+  }]
+}

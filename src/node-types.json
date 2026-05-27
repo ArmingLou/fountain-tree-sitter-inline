@@ -1,0 +1,46 @@
+[
+  {
+    "type": "document",
+    "named": true,
+    "root": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "inline_boneyard",
+          "named": true
+        },
+        {
+          "type": "inline_note",
+          "named": true
+        },
+        {
+          "type": "paren_text",
+          "named": true
+        },
+        {
+          "type": "text",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "inline_boneyard",
+    "named": true
+  },
+  {
+    "type": "inline_note",
+    "named": true
+  },
+  {
+    "type": "paren_text",
+    "named": true
+  },
+  {
+    "type": "text",
+    "named": true
+  }
+]

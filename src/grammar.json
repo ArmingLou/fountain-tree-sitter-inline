@@ -1,0 +1,59 @@
+{
+  "$schema": "https://tree-sitter.github.io/tree-sitter/assets/schemas/grammar.schema.json",
+  "name": "fountain_inline",
+  "rules": {
+    "document": {
+      "type": "REPEAT",
+      "content": {
+        "type": "CHOICE",
+        "members": [
+          {
+            "type": "SYMBOL",
+            "name": "inline_note"
+          },
+          {
+            "type": "SYMBOL",
+            "name": "inline_boneyard"
+          },
+          {
+            "type": "SYMBOL",
+            "name": "paren_text"
+          },
+          {
+            "type": "SYMBOL",
+            "name": "text"
+          }
+        ]
+      }
+    },
+    "paren_text": {
+      "type": "PATTERN",
+      "value": "\\([^)\\n]+\\)"
+    },
+    "text": {
+      "type": "PATTERN",
+      "value": "[^\\[\\(/\\n]+|\\/|\\n|."
+    }
+  },
+  "extras": [
+    {
+      "type": "PATTERN",
+      "value": "\\s"
+    }
+  ],
+  "conflicts": [],
+  "precedences": [],
+  "externals": [
+    {
+      "type": "SYMBOL",
+      "name": "inline_note"
+    },
+    {
+      "type": "SYMBOL",
+      "name": "inline_boneyard"
+    }
+  ],
+  "inline": [],
+  "supertypes": [],
+  "reserved": {}
+}

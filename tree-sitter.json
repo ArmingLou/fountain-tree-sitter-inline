@@ -1,0 +1,12 @@
+{
+  "grammars": [
+    {
+      "name": "fountain_inline",
+      "path": ".",
+      "scope": "source.fountain-inline"
+    }
+  ],
+  "metadata": {
+    "version": "0.1.0"
+  }
+}
