@@ -54,8 +54,11 @@ bool tree_sitter_fountain_inline_external_scanner_scan(
       while (lexer->lookahead != '\0') {
         if (lexer->lookahead == close_paren) {
           lexer->advance(lexer, false);
-          found_close = true;
-          break;
+          if (lexer->lookahead == '\n' || lexer->lookahead == '\0') {
+            found_close = true;
+            break;
+          }
+          continue;
         }
         if (lexer->lookahead == '\n') {
           lexer->advance(lexer, false);
